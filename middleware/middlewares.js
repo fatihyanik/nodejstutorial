@@ -1,50 +1,96 @@
-const passwordControl = (req, res, next) => {
+import { allUsers } from "./client.js";
+
+const passwordControl = (req,res,next)=>{
 
     const erisimYetkisi = true;
 
 
-    if (!erisimYetkisi) {
+    if(!erisimYetkisi){
         res.status(401).json({
-            success: false,
-            message: "Sifreniz yanlis!"
+            success:false,
+            message:"Sifreniz yanlis!"
         })
-    } else {
+    }else{
         next();
     }
 }
 
 
-const authControl = (req, res, next) => {
+/* const authControl = (req,res,next)=>{
 
     const erisimYetkisi = true;
 
-    if (!erisimYetkisi) {
+    if(!erisimYetkisi){
         res.status(401).json({
-            success: false,
-            message: "Yetkili degilsiniz!"
+            success:false,
+            message:"Yetkili degilsiniz!"
         })
-    } else {
+    }else{
         next();
+    }
+} */
+
+
+
+
+const postIcinControl = (req,res,next)=>{
+
+/*     console.log(req.body.ad);
+    console.log(req.body.password);
+
+    console.log(req.body);
+
+   console.log(allUsers) */
+
+   
+   const foundedUser = allUsers.find(user=>{
+    
+   return user.ad == req.body.ad && user.password == req.body.password
+   })
+
+   console.log(foundedUser);
+
+
+    if(foundedUser){            
+
+        next();
+        
+    }else{
+        res.status(401).json({
+            status:false,
+            message:"Sifre yada isim hatali!"
+        })
     }
 }
 
+const authControl = (req,res,next)=>{
 
-const postIcinControl = (req, res, next) => {
-
-    if (req.body.ad === "ahmet" && req.body.sifre == 123) {
-        res.status(200).json({
-            status: true,
-            message: "Erisim sagladiniz"
-        })
-
-        next();
-
-    } else {
-        res.status(401).json({
-            status: false,
-            message: "Sifre yada isim hatali!"
-        })
+    /*     console.log(req.body.ad);
+        console.log(req.body.password);
+    
+        console.log(req.body);
+    
+       console.log(allUsers) */
+    
+       
+       const foundedUser = allUsers.find(user=>{
+        
+       return user.ad == req.body.ad && user.password == req.body.password && user.role == "admin"
+       })
+    
+       console.log(foundedUser);
+    
+    
+        if(foundedUser){            
+    
+            next();
+            
+        }else{
+            res.status(401).json({
+                status:false,
+                message:"Yetkiniz yok!"
+            })
+        }
     }
-}
 
-export { passwordControl, authControl, postIcinControl };
+export { passwordControl,authControl,postIcinControl};
